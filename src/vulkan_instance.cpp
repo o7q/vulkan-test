@@ -4,7 +4,7 @@
 
 void VulkanEngine::init_vk_instance()
 {
-    VkApplicationInfo appInfo = {};
+    VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "Vulkan Engine";
     appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -20,7 +20,7 @@ void VulkanEngine::init_vk_instance()
         std::cout << "Found extension: " << extensions[i] << '\n';
     }
 
-    VkInstanceCreateInfo instanceCreateInfo = {};
+    VkInstanceCreateInfo instanceCreateInfo{};
     instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     instanceCreateInfo.pApplicationInfo = &appInfo;
     instanceCreateInfo.enabledExtensionCount = extensionCount;

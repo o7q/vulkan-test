@@ -1,3 +1,4 @@
 .vscode
 build
 vulkan_test
+*.spv

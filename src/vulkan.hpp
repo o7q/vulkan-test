@@ -43,11 +43,11 @@ private:
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-    QueueFamilyIndices queryQueueFamilyIndices(VkPhysicalDevice device);
-    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+    QueueFamilyIndices queryQueueFamilyIndices(VkPhysicalDevice physicalDevice);
+    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice physicalDevice);
 
-    bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-    bool isDeviceSuitable(VkPhysicalDevice device);
+    bool checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
+    bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
@@ -60,6 +60,8 @@ private:
     void init_vk_physical_device();
     void init_vk_logical_device();
     void init_vk_swap_chain();
+    void init_vk_image_views();
+    void init_vk_graphics_pipeline();
 
 private:
     const std::vector<const char *> m_vk_layers = {
@@ -88,7 +90,15 @@ private:
     VkQueue m_vk_presentQueue;
     //
 
-    // swapchain
+    // swap chain
     VkSwapchainKHR m_vk_swapChain;
+    std::vector<VkImage> m_vk_swapChainImages;
+    std::vector<VkImageView> m_vk_swapChainImageViews;
+    VkFormat m_vk_swapChainImageFormat;
+    VkExtent2D m_vk_swapChainExtent;
+    //
+
+    // shaders
+    VkShaderModule createShaderModule(const std::vector<char> &code);
     //
 };

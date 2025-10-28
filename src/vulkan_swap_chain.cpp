@@ -67,7 +67,7 @@ void VulkanEngine::init_vk_swap_chain()
         imageCount = swapChainSupport.capabilities.maxImageCount;
     }
 
-    VkSwapchainCreateInfoKHR createInfo = {};
+    VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     createInfo.surface = m_vk_surface;
     createInfo.minImageCount = imageCount;
@@ -105,4 +105,11 @@ void VulkanEngine::init_vk_swap_chain()
     {
         std::cout << "Created the swap chain successfully!\n";
     }
+
+    vkGetSwapchainImagesKHR(m_vk_device, m_vk_swapChain, &imageCount, nullptr);
+    m_vk_swapChainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(m_vk_device, m_vk_swapChain, &imageCount, m_vk_swapChainImages.data());
+
+    m_vk_swapChainImageFormat = surfaceFormat.format;
+    m_vk_swapChainExtent = extent;
 }
