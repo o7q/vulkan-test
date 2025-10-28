@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <vector>
+#include <cstdint>
 
 #include <vulkan/vulkan.h>
 #include <SDL3/SDL.h>
@@ -48,16 +49,17 @@ private:
     bool checkDeviceExtensionSupport(VkPhysicalDevice device);
     bool isDeviceSuitable(VkPhysicalDevice device);
 
+    VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
+    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
+    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
+
 private:
     void init_sdl();
     void init_vk_instance();
     void init_sdl_surface();
     void init_vk_physical_device();
     void init_vk_logical_device();
-
-    void init_vk_swap_chain()
-    {
-    }
+    void init_vk_swap_chain();
 
 private:
     const std::vector<const char *> m_vk_layers = {
@@ -84,5 +86,9 @@ private:
     // queue
     VkQueue m_vk_graphicsQueue;
     VkQueue m_vk_presentQueue;
+    //
+
+    // swapchain
+    VkSwapchainKHR m_vk_swapChain;
     //
 };

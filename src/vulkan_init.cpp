@@ -12,6 +12,7 @@ void VulkanEngine::init()
 
 void VulkanEngine::cleanup()
 {
+    vkDestroySwapchainKHR(m_vk_device, m_vk_swapChain, nullptr);
     vkDestroyDevice(m_vk_device, nullptr);
     vkDestroySurfaceKHR(m_vk_instance, m_vk_surface, nullptr);
     vkDestroyInstance(m_vk_instance, nullptr);
