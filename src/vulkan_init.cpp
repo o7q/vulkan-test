@@ -13,13 +13,13 @@ void VulkanEngine::init()
     init_vk_graphicsPipeline();
     init_vk_framebuffers();
     init_vk_commandPool();
-    init_vk_commandBuffer();
+    init_vk_commandBuffers();
     init_vk_syncObjects();
 }
 
 void VulkanEngine::cleanup()
 {
-    for (size_t i = 0; i < M_MAX_FRAMES_IN_FLIGHT; i++)
+    for (size_t i = 0; i < m_vk_swapChainImages.size(); i++)
     {
         vkDestroySemaphore(m_vk_device, m_vk_renderFinishedSemaphores[i], nullptr);
         vkDestroySemaphore(m_vk_device, m_vk_imageAvailableSemaphores[i], nullptr);

@@ -88,7 +88,7 @@ private:
     void init_vk_graphicsPipeline();
     void init_vk_framebuffers();
     void init_vk_commandPool();
-    void init_vk_commandBuffer();
+    void init_vk_commandBuffers();
     void init_vk_syncObjects();
 
 private:
@@ -152,5 +152,4 @@ private:
     //
 
     uint32_t m_currentFrame = 0;
-    const int M_MAX_FRAMES_IN_FLIGHT = 2;
 };

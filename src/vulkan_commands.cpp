@@ -17,9 +17,9 @@ void VulkanEngine::init_vk_commandPool()
     }
 }
 
-void VulkanEngine::init_vk_commandBuffer()
+void VulkanEngine::init_vk_commandBuffers()
 {
-    m_vk_commandBuffers.resize(M_MAX_FRAMES_IN_FLIGHT);
+    m_vk_commandBuffers.resize(m_vk_swapChainImages.size());
 
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -37,19 +37,16 @@ void VulkanEngine::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.flags = 0;                  // optional
-    beginInfo.pInheritanceInfo = nullptr; // optional
 
     if (vkBeginCommandBuffer(commandBuffer, &beginInfo) == VK_SUCCESS)
     {
-        std::cout << "Created the command buffer successfully!\n";
+        // std::cout << "Created the command buffer successfully!\n";
     }
 
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = m_vk_renderPass;
     renderPassInfo.framebuffer = m_vk_swapChainFramebuffers[imageIndex];
-
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = m_vk_swapChainExtent;
 
@@ -81,6 +78,6 @@ void VulkanEngine::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 
     if (vkEndCommandBuffer(commandBuffer) == VK_SUCCESS)
     {
-        std::cout << "Recorded the command buffer successfully!\n";
+        // std::cout << "Recorded the command buffer successfully!\n";
     }
 }
