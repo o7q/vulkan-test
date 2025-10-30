@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void VulkanEngine::init_vk_image_views()
+void VulkanEngine::init_vk_imageViews()
 {
     m_vk_swapChainImageViews.resize(m_vk_swapChainImages.size());
 

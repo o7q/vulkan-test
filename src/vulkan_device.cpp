@@ -49,7 +49,7 @@ bool VulkanEngine::isDeviceSuitable(VkPhysicalDevice physicalDevice)
     return valid;
 }
 
-void VulkanEngine::init_vk_physical_device()
+void VulkanEngine::init_vk_physicalDevice()
 {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(m_vk_instance, &deviceCount, nullptr);
@@ -67,7 +67,7 @@ void VulkanEngine::init_vk_physical_device()
     }
 }
 
-void VulkanEngine::init_vk_logical_device()
+void VulkanEngine::init_vk_logicalDevice()
 {
     QueueFamilyIndices queueFamilyIndices = queryQueueFamilyIndices(m_vk_physicalDevice);
 

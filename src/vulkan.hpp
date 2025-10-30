@@ -14,6 +14,25 @@ public:
     VulkanEngine()
     {
         init();
+
+        bool running = true;
+        while (running)
+        {
+            SDL_Event event;
+            while (SDL_PollEvent(&event))
+            {
+                switch (event.type)
+                {
+                case SDL_EVENT_QUIT:
+                    running = false;
+                    break;
+                }
+            }
+
+            drawFrame();
+        }
+
+        vkDeviceWaitIdle(m_vk_device);
     }
 
     ~VulkanEngine()
@@ -53,15 +72,24 @@ private:
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+    void drawFrame();
+
 private:
     void init_sdl();
     void init_vk_instance();
     void init_sdl_surface();
-    void init_vk_physical_device();
-    void init_vk_logical_device();
-    void init_vk_swap_chain();
-    void init_vk_image_views();
-    void init_vk_graphics_pipeline();
+    void init_vk_physicalDevice();
+    void init_vk_logicalDevice();
+    void init_vk_swapChain();
+    void init_vk_imageViews();
+    void init_vk_renderPass();
+    void init_vk_graphicsPipeline();
+    void init_vk_framebuffers();
+    void init_vk_commandPool();
+    void init_vk_commandBuffer();
+    void init_vk_syncObjects();
 
 private:
     const std::vector<const char *> m_vk_layers = {
@@ -101,4 +129,28 @@ private:
     // shaders
     VkShaderModule createShaderModule(const std::vector<char> &code);
     //
+
+    // pipeline
+    VkRenderPass m_vk_renderPass;
+    VkPipelineLayout m_vk_pipelineLayout;
+    VkPipeline m_vk_graphicsPipeline;
+    //
+
+    // framebuffers
+    std::vector<VkFramebuffer> m_vk_swapChainFramebuffers;
+    //
+
+    // command buffers
+    VkCommandPool m_vk_commandPool;
+    std::vector<VkCommandBuffer> m_vk_commandBuffers;
+    //
+
+    // drawing
+    std::vector<VkSemaphore> m_vk_imageAvailableSemaphores;
+    std::vector<VkSemaphore> m_vk_renderFinishedSemaphores;
+    std::vector<VkFence> m_vk_inFlightFences;
+    //
+
+    uint32_t m_currentFrame = 0;
+    const int M_MAX_FRAMES_IN_FLIGHT = 2;
 };

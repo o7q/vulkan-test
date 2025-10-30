@@ -52,7 +52,7 @@ VkExtent2D VulkanEngine::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabi
     }
 }
 
-void VulkanEngine::init_vk_swap_chain()
+void VulkanEngine::init_vk_swapChain()
 {
     SwapChainSupportDetails swapChainSupport = querySwapChainSupport(m_vk_physicalDevice);
 
