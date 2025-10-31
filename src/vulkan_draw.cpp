@@ -30,10 +30,17 @@ void VulkanEngine::init_vk_syncObjects()
 void VulkanEngine::drawFrame()
 {
     vkWaitForFences(m_vk_device, 1, &m_vk_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
-    vkResetFences(m_vk_device, 1, &m_vk_inFlightFences[m_currentFrame]);
 
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(m_vk_device, m_vk_swapChain, UINT64_MAX, m_vk_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(m_vk_device, m_vk_swapChain, UINT64_MAX, m_vk_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR)
+    {
+        recreateSwapChain();
+        return;
+    }
+
+    vkResetFences(m_vk_device, 1, &m_vk_inFlightFences[m_currentFrame]);
 
     vkResetCommandBuffer(m_vk_commandBuffers[m_currentFrame], 0);
     recordCommandBuffer(m_vk_commandBuffers[m_currentFrame], imageIndex);
