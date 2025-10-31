@@ -76,6 +76,9 @@ private:
 
     void drawFrame();
 
+    void cleanupSwapChain();
+    void recreateSwapChain();
+
 private:
     void init_sdl();
     void init_vk_instance();

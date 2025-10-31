@@ -19,6 +19,13 @@ void VulkanEngine::init()
 
 void VulkanEngine::cleanup()
 {
+    cleanupSwapChain();
+
+    vkDestroyPipeline(m_vk_device, m_vk_graphicsPipeline, nullptr);
+    vkDestroyPipelineLayout(m_vk_device, m_vk_pipelineLayout, nullptr);
+
+    vkDestroyRenderPass(m_vk_device, m_vk_renderPass, nullptr);
+
     for (size_t i = 0; i < m_vk_swapChainImages.size(); i++)
     {
         vkDestroySemaphore(m_vk_device, m_vk_renderFinishedSemaphores[i], nullptr);
@@ -28,18 +35,6 @@ void VulkanEngine::cleanup()
 
     vkDestroyCommandPool(m_vk_device, m_vk_commandPool, nullptr);
 
-    for (auto framebuffer : m_vk_swapChainFramebuffers)
-    {
-        vkDestroyFramebuffer(m_vk_device, framebuffer, nullptr);
-    }
-    vkDestroyPipeline(m_vk_device, m_vk_graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(m_vk_device, m_vk_pipelineLayout, nullptr);
-    vkDestroyRenderPass(m_vk_device, m_vk_renderPass, nullptr);
-    for (auto imageView : m_vk_swapChainImageViews)
-    {
-        vkDestroyImageView(m_vk_device, imageView, nullptr);
-    }
-    vkDestroySwapchainKHR(m_vk_device, m_vk_swapChain, nullptr);
     vkDestroyDevice(m_vk_device, nullptr);
     vkDestroySurfaceKHR(m_vk_instance, m_vk_surface, nullptr);
     vkDestroyInstance(m_vk_instance, nullptr);

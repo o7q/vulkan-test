@@ -113,3 +113,29 @@ void VulkanEngine::init_vk_swapChain()
     m_vk_swapChainImageFormat = surfaceFormat.format;
     m_vk_swapChainExtent = extent;
 }
+
+void VulkanEngine::cleanupSwapChain()
+{
+    for (auto framebuffer : m_vk_swapChainFramebuffers)
+    {
+        vkDestroyFramebuffer(m_vk_device, framebuffer, nullptr);
+    }
+
+    for (auto imageView : m_vk_swapChainImageViews)
+    {
+        vkDestroyImageView(m_vk_device, imageView, nullptr);
+    }
+
+    vkDestroySwapchainKHR(m_vk_device, m_vk_swapChain, nullptr);
+}
+
+void VulkanEngine::recreateSwapChain()
+{
+    vkDeviceWaitIdle(m_vk_device);
+
+    cleanupSwapChain();
+
+    init_vk_swapChain();
+    init_vk_imageViews();
+    init_vk_framebuffers();
+}
