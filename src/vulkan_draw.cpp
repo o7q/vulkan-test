@@ -17,9 +17,9 @@ void VulkanEngine::init_vk_syncObjects()
 
     for (size_t i = 0; i < m_vk_swapChainImages.size(); i++)
     {
-        if (vkCreateSemaphore(m_vk_device, &semaphoreInfo, nullptr, &m_vk_imageAvailableSemaphores[i]) != VK_SUCCESS ||
-            vkCreateSemaphore(m_vk_device, &semaphoreInfo, nullptr, &m_vk_renderFinishedSemaphores[i]) != VK_SUCCESS ||
-            vkCreateFence(m_vk_device, &fenceInfo, nullptr, &m_vk_inFlightFences[i]) != VK_SUCCESS)
+        if (vkCreateSemaphore(m_device.getVkDevice(), &semaphoreInfo, nullptr, &m_vk_imageAvailableSemaphores[i]) != VK_SUCCESS ||
+            vkCreateSemaphore(m_device.getVkDevice(), &semaphoreInfo, nullptr, &m_vk_renderFinishedSemaphores[i]) != VK_SUCCESS ||
+            vkCreateFence(m_device.getVkDevice(), &fenceInfo, nullptr, &m_vk_inFlightFences[i]) != VK_SUCCESS)
         {
 
             std::cout << '[' << i << "] Created the semaphores successfully!\n";
@@ -29,10 +29,10 @@ void VulkanEngine::init_vk_syncObjects()
 
 void VulkanEngine::drawFrame()
 {
-    vkWaitForFences(m_vk_device, 1, &m_vk_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+    vkWaitForFences(m_device.getVkDevice(), 1, &m_vk_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
-    VkResult result = vkAcquireNextImageKHR(m_vk_device, m_vk_swapChain, UINT64_MAX, m_vk_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(m_device.getVkDevice(), m_vk_swapChain, UINT64_MAX, m_vk_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR)
     {
@@ -40,7 +40,7 @@ void VulkanEngine::drawFrame()
         return;
     }
 
-    vkResetFences(m_vk_device, 1, &m_vk_inFlightFences[m_currentFrame]);
+    vkResetFences(m_device.getVkDevice(), 1, &m_vk_inFlightFences[m_currentFrame]);
 
     vkResetCommandBuffer(m_vk_commandBuffers[m_currentFrame], 0);
     recordCommandBuffer(m_vk_commandBuffers[m_currentFrame], imageIndex);
@@ -60,7 +60,7 @@ void VulkanEngine::drawFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
-    if (vkQueueSubmit(m_vk_graphicsQueue, 1, &submitInfo, m_vk_inFlightFences[m_currentFrame]) != VK_SUCCESS)
+    if (vkQueueSubmit(m_device.getGraphicsQueue(), 1, &submitInfo, m_vk_inFlightFences[m_currentFrame]) != VK_SUCCESS)
     {
         std::cout << "Failed to submit draw command buffer!\n";
     }
@@ -77,7 +77,7 @@ void VulkanEngine::drawFrame()
 
     presentInfo.pImageIndices = &imageIndex;
 
-    vkQueuePresentKHR(m_vk_presentQueue, &presentInfo);
+    vkQueuePresentKHR(m_device.getPresentQueue(), &presentInfo);
 
     m_currentFrame = (m_currentFrame + 1) % m_vk_swapChainImages.size();
 }

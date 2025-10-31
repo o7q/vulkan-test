@@ -23,7 +23,7 @@ void VulkanEngine::init_vk_imageViews()
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(m_vk_device, &createInfo, nullptr, &m_vk_swapChainImageViews[i]) == VK_SUCCESS)
+        if (vkCreateImageView(m_device.getVkDevice(), &createInfo, nullptr, &m_vk_swapChainImageViews[i]) == VK_SUCCESS)
         {
             std::cout << '[' << i << "] Created the image view successfully!\n";
         }

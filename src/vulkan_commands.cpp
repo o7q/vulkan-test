@@ -4,14 +4,14 @@
 
 void VulkanEngine::init_vk_commandPool()
 {
-    QueueFamilyIndices queueFamilyIndices = queryQueueFamilyIndices(m_vk_physicalDevice);
+    VulkanDevice::QueueFamilyIndices queueFamilyIndices = m_device.getQueueFamilyIndices();
 
     VkCommandPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-    if (vkCreateCommandPool(m_vk_device, &poolInfo, nullptr, &m_vk_commandPool) == VK_SUCCESS)
+    if (vkCreateCommandPool(m_device.getVkDevice(), &poolInfo, nullptr, &m_vk_commandPool) == VK_SUCCESS)
     {
         std::cout << "Created the command pool successfully!\n";
     }
@@ -27,7 +27,7 @@ void VulkanEngine::init_vk_commandBuffers()
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocInfo.commandBufferCount = (uint32_t)m_vk_commandBuffers.size();
 
-    if (vkAllocateCommandBuffers(m_vk_device, &allocInfo, m_vk_commandBuffers.data()) == VK_SUCCESS)
+    if (vkAllocateCommandBuffers(m_device.getVkDevice(), &allocInfo, m_vk_commandBuffers.data()) == VK_SUCCESS)
     {
         std::cout << "Allocated the command buffers successfully!\n";
     }

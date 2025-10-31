@@ -54,7 +54,7 @@ VkExtent2D VulkanEngine::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabi
 
 void VulkanEngine::init_vk_swapChain()
 {
-    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(m_vk_physicalDevice);
+    VulkanDevice::SwapChainSupportDetails swapChainSupport = m_device.getSwapChainSupportDetails();
 
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
     VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -77,7 +77,7 @@ void VulkanEngine::init_vk_swapChain()
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = queryQueueFamilyIndices(m_vk_physicalDevice);
+    VulkanDevice::QueueFamilyIndices indices = m_device.getQueueFamilyIndices();
     uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
     if (indices.graphicsFamily != indices.presentFamily)
@@ -101,14 +101,14 @@ void VulkanEngine::init_vk_swapChain()
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(m_vk_device, &createInfo, nullptr, &m_vk_swapChain) == VK_SUCCESS)
+    if (vkCreateSwapchainKHR(m_device.getVkDevice(), &createInfo, nullptr, &m_vk_swapChain) == VK_SUCCESS)
     {
         std::cout << "Created the swap chain successfully!\n";
     }
 
-    vkGetSwapchainImagesKHR(m_vk_device, m_vk_swapChain, &imageCount, nullptr);
+    vkGetSwapchainImagesKHR(m_device.getVkDevice(), m_vk_swapChain, &imageCount, nullptr);
     m_vk_swapChainImages.resize(imageCount);
-    vkGetSwapchainImagesKHR(m_vk_device, m_vk_swapChain, &imageCount, m_vk_swapChainImages.data());
+    vkGetSwapchainImagesKHR(m_device.getVkDevice(), m_vk_swapChain, &imageCount, m_vk_swapChainImages.data());
 
     m_vk_swapChainImageFormat = surfaceFormat.format;
     m_vk_swapChainExtent = extent;
@@ -118,20 +118,20 @@ void VulkanEngine::cleanupSwapChain()
 {
     for (auto framebuffer : m_vk_swapChainFramebuffers)
     {
-        vkDestroyFramebuffer(m_vk_device, framebuffer, nullptr);
+        vkDestroyFramebuffer(m_device.getVkDevice(), framebuffer, nullptr);
     }
 
     for (auto imageView : m_vk_swapChainImageViews)
     {
-        vkDestroyImageView(m_vk_device, imageView, nullptr);
+        vkDestroyImageView(m_device.getVkDevice(), imageView, nullptr);
     }
 
-    vkDestroySwapchainKHR(m_vk_device, m_vk_swapChain, nullptr);
+    vkDestroySwapchainKHR(m_device.getVkDevice(), m_vk_swapChain, nullptr);
 }
 
 void VulkanEngine::recreateSwapChain()
 {
-    vkDeviceWaitIdle(m_vk_device);
+    vkDeviceWaitIdle(m_device.getVkDevice());
 
     cleanupSwapChain();
 

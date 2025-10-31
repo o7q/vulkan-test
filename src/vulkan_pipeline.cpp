@@ -76,7 +76,7 @@ void VulkanEngine::init_vk_graphicsPipeline()
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-    if (vkCreatePipelineLayout(m_vk_device, &pipelineLayoutInfo, nullptr, &m_vk_pipelineLayout) == VK_SUCCESS)
+    if (vkCreatePipelineLayout(m_device.getVkDevice(), &pipelineLayoutInfo, nullptr, &m_vk_pipelineLayout) == VK_SUCCESS)
     {
         std::cout << "Created the graphics pipeline layout successfully!\n";
     }
@@ -96,11 +96,11 @@ void VulkanEngine::init_vk_graphicsPipeline()
     pipelineInfo.renderPass = m_vk_renderPass;
     pipelineInfo.subpass = 0;
 
-    if (vkCreateGraphicsPipelines(m_vk_device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_vk_graphicsPipeline) == VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(m_device.getVkDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_vk_graphicsPipeline) == VK_SUCCESS)
     {
         std::cout << "Created the graphics pipeline successfully!\n";
     }
 
-    vkDestroyShaderModule(m_vk_device, fragShaderModule, nullptr);
-    vkDestroyShaderModule(m_vk_device, vertShaderModule, nullptr);
+    vkDestroyShaderModule(m_device.getVkDevice(), fragShaderModule, nullptr);
+    vkDestroyShaderModule(m_device.getVkDevice(), vertShaderModule, nullptr);
 }

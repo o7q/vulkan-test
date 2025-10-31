@@ -10,7 +10,7 @@ VkShaderModule VulkanEngine::createShaderModule(const std::vector<char> &code)
     createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
 
     VkShaderModule shaderModule;
-    if (vkCreateShaderModule(m_vk_device, &createInfo, nullptr, &shaderModule) == VK_SUCCESS)
+    if (vkCreateShaderModule(m_device.getVkDevice(), &createInfo, nullptr, &shaderModule) == VK_SUCCESS)
     {
         std::cout << "Created the shader module successfully!\n";
     }

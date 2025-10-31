@@ -8,6 +8,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
 
+#include "device/vulkan_device.hpp"
+
 class VulkanEngine
 {
 public:
@@ -32,7 +34,7 @@ public:
             drawFrame();
         }
 
-        vkDeviceWaitIdle(m_vk_device);
+        vkDeviceWaitIdle(m_device.getVkDevice());
     }
 
     ~VulkanEngine()
@@ -44,30 +46,6 @@ public:
     void cleanup();
 
 private:
-    struct QueueFamilyIndices
-    {
-        std::optional<uint32_t> graphicsFamily;
-        std::optional<uint32_t> presentFamily;
-
-        bool isComplete()
-        {
-            return graphicsFamily.has_value() && presentFamily.has_value();
-        }
-    };
-
-    struct SwapChainSupportDetails
-    {
-        VkSurfaceCapabilitiesKHR capabilities;
-        std::vector<VkSurfaceFormatKHR> formats;
-        std::vector<VkPresentModeKHR> presentModes;
-    };
-
-    QueueFamilyIndices queryQueueFamilyIndices(VkPhysicalDevice physicalDevice);
-    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice physicalDevice);
-
-    bool checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
-    bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
-
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
@@ -83,8 +61,6 @@ private:
     void init_sdl();
     void init_vk_instance();
     void init_sdl_surface();
-    void init_vk_physicalDevice();
-    void init_vk_logicalDevice();
     void init_vk_swapChain();
     void init_vk_imageViews();
     void init_vk_renderPass();
@@ -98,9 +74,6 @@ private:
     const std::vector<const char *> m_vk_layers = {
         "VK_LAYER_KHRONOS_validation"};
 
-    const std::vector<const char *> m_vk_deviceExtensions = {
-        VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-
     // window
     SDL_Window *m_sdl_window = nullptr;
     VkSurfaceKHR m_vk_surface;
@@ -111,14 +84,7 @@ private:
     //
 
     // device
-    VkDevice m_vk_device = VK_NULL_HANDLE;
-    VkPhysicalDevice m_vk_physicalDevice = VK_NULL_HANDLE;
-    VkPhysicalDeviceFeatures m_vk_physicalDeviceFeatures = {};
-    //
-
-    // queue
-    VkQueue m_vk_graphicsQueue;
-    VkQueue m_vk_presentQueue;
+    VulkanDevice m_device;
     //
 
     // swap chain

@@ -40,7 +40,7 @@ void VulkanEngine::init_vk_renderPass()
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
 
-    if (vkCreateRenderPass(m_vk_device, &renderPassInfo, nullptr, &m_vk_renderPass) == VK_SUCCESS)
+    if (vkCreateRenderPass(m_device.getVkDevice(), &renderPassInfo, nullptr, &m_vk_renderPass) == VK_SUCCESS)
     {
         std::cout << "Created the render pass successfully!\n";
     }

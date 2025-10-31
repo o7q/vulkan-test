@@ -20,7 +20,7 @@ void VulkanEngine::init_vk_framebuffers()
         framebufferInfo.height = m_vk_swapChainExtent.height;
         framebufferInfo.layers = 1;
 
-        if (vkCreateFramebuffer(m_vk_device, &framebufferInfo, nullptr, &m_vk_swapChainFramebuffers[i]) == VK_SUCCESS)
+        if (vkCreateFramebuffer(m_device.getVkDevice(), &framebufferInfo, nullptr, &m_vk_swapChainFramebuffers[i]) == VK_SUCCESS)
         {
             std::cout << '[' << i << "] Created the framebuffer successfully!\n";
         }
